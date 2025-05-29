@@ -21,7 +21,7 @@ if uploaded_file is not None:
     df["Grid Import"] = ((df["Grid Power(W)"] * (df["delta_t_s"] / 3600.0))/1000).where(df["Grid Power(W)"] > 0, 0)
     df["Grid Export"] = ((df["Grid Power(W)"] * (df["delta_t_s"] / 3600.0))/1000).where(df["Grid Power(W)"] < 0, 0)
 
-    day_energy = df.groupby("date")[["PV Production","Output Active Energy","Battery Charge Energy","Grid Import Energy","Grid Export Energy"]].sum().reset_index()
+    day_energy = df.groupby("date")[["PV Production","Consumption","Battery Charge","Grid Import","Grid Export"]].sum().reset_index()
 
     pv_energy = df["PV Production"].sum()
     output_energy = df["Consumption"].sum()

@@ -24,7 +24,7 @@ if uploaded_file is not None:
     day_energy = df.groupby("date")[["PV Production","Output Active Energy","Battery Charge Energy","Grid Import Energy","Grid Export Energy"]].sum().reset_index()
 
     pv_energy = df["PV Production"].sum()
-    output_energy = df[Consumption"].sum()
+    output_energy = df["Consumption"].sum()
     pv_charge_energy = df["PV Charge"].sum()
     batt_charge_energy = df["Battery Charge"].sum()
     batt_discharge_energy = df["Battery Discharge"].sum()

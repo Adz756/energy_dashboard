@@ -4,37 +4,36 @@ import matplotlib.pyplot as plt
 
 st.title("Energy Dashboard")
 
-uploaded_file = st.file_uploader("Wybierz plik Excel", type=["xlsx"])
+uploaded_file = st.file_uploader("Upload data file", type=["xlsx"])
 if uploaded_file is not None:
     df = pd.read_excel(uploaded_file, parse_dates=["Timestamp"])
-    st.write("Dane źródłowe:", df.head())
-
+    st.write("Source data:", df.head())
     df = df.sort_values("Timestamp")
     #df["delta_t_s"] = df["Timestamp"].diff().dt.total_seconds()
     #df = df.dropna(subset=["delta_t_s"])
     df["delta_t_s"] = 300
     df["date"] = df["Timestamp"].dt.date
-    df["Output Active Energy"] = (df["Output Active Power(W)"] * (df["delta_t_s"] / 3600.0))/1000
-    df["Battery Charge Energy"] = ((df["Battery Power(W)"] * (df["delta_t_s"] / 3600.0))/1000).where(df["Battery Power(W)"] > 0, 0)
-    df["Battery Discharge Energy"] = ((df["Battery Power(W)"] * (df["delta_t_s"] / 3600.0))/1000).where(df["Battery Power(W)"] < 0, 0)
+    df["Consumption"] = (df["Output Active Power(W)"] * (df["delta_t_s"] / 3600.0))/1000
+    df["Battery Charge"] = ((df["Battery Power(W)"] * (df["delta_t_s"] / 3600.0))/1000).where(df["Battery Power(W)"] > 0, 0)
+    df["Battery Discharge"] = ((df["Battery Power(W)"] * (df["delta_t_s"] / 3600.0))/1000).where(df["Battery Power(W)"] < 0, 0)
     df["PV Production"] = (df["PV Power(W)"] * (df["delta_t_s"] / 3600.0))/1000
-    df["PV Charge Energy"] = (df["PV Charge Power(W)"] * (df["delta_t_s"] / 3600.0))/1000
-    df["Grid Import Energy"] = ((df["Grid Power(W)"] * (df["delta_t_s"] / 3600.0))/1000).where(df["Grid Power(W)"] > 0, 0)
-    df["Grid Export Energy"] = ((df["Grid Power(W)"] * (df["delta_t_s"] / 3600.0))/1000).where(df["Grid Power(W)"] < 0, 0)
+    df["PV Charge"] = (df["PV Charge Power(W)"] * (df["delta_t_s"] / 3600.0))/1000
+    df["Grid Import"] = ((df["Grid Power(W)"] * (df["delta_t_s"] / 3600.0))/1000).where(df["Grid Power(W)"] > 0, 0)
+    df["Grid Export"] = ((df["Grid Power(W)"] * (df["delta_t_s"] / 3600.0))/1000).where(df["Grid Power(W)"] < 0, 0)
 
     day_energy = df.groupby("date")[["PV Production","Output Active Energy","Battery Charge Energy","Grid Import Energy","Grid Export Energy"]].sum().reset_index()
 
     pv_energy = df["PV Production"].sum()
-    output_energy = df["Output Active Energy"].sum()
-    pv_charge_energy = df["PV Charge Energy"].sum()
-    batt_charge_energy = df["Battery Charge Energy"].sum()
-    batt_discharge_energy = df["Battery Discharge Energy"].sum()
-    grid_import_energy = df["Grid Import Energy"].sum()
-    grid_export_energy = df["Grid Export Energy"].sum()
+    output_energy = df[Consumption"].sum()
+    pv_charge_energy = df["PV Charge"].sum()
+    batt_charge_energy = df["Battery Charge"].sum()
+    batt_discharge_energy = df["Battery Discharge"].sum()
+    grid_import_energy = df["Grid Import"].sum()
+    grid_export_energy = df["Grid Export"].sum()
 
     st.write(f"PV production: {pv_energy:.1f} kWh")
     st.write(f"Grid import: {grid_import_energy:.1f} kWh")
-    st.write(f"Output: {output_energy:.1f} kWh")
+    st.write(f"Consumption: {output_energy:.1f} kWh")
     #st.write(f"PV Charge: {pv_charge_energy:.1f} kWh")
     st.write(f"Batt Charge: {batt_charge_energy:.1f} kWh")
     st.write(f"Batt Disharge: {batt_discharge_energy:.1f} kWh")

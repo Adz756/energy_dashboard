@@ -44,6 +44,6 @@ if uploaded_file is not None:
 
     # tu możesz dodać przetwarzanie, wykresy itd.
     #st.write("Wykres (przykładowy):")
-    #fig, ax = plt.subplots()
-    #df["Output Active Power(W)"].plot(ax=ax)
-    #st.pyplot(fig)
+    fig, ax = plt.subplots()
+    df["Output Active Power(W)"].plot(ax=ax)
+    st.pyplot(fig)

@@ -57,7 +57,7 @@ if uploaded_file is not None:
 
     bars1 = ax.bar(group_centers - width / 2, day_energy["PV Production"], width,
                    label=f"PV Production ({pv_energy:.1f} kWh)", color="orange")
-    bars2 = ax.bar(group_centers + width / 2, day_energy["Output Active Energy"], width,
+    bars2 = ax.bar(group_centers + width / 2, day_energy["Consumption"], width,
                    label=f"Output ({output_energy:.1f} kWh)", color="skyblue")
     
     # Dodaj etykiety
